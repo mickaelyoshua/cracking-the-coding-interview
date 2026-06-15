@@ -21,3 +21,4 @@ Cargo.lock
 *.swp
 *.swo
 .DS_Store
+proptest-regressions/
