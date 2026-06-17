@@ -33,7 +33,7 @@ Este arquivo serve como spec vivo e contexto primário para qualquer agente de I
 - Commits de uma linha, minúsculo, sem ponto, < 50 caracteres (foco no porquê/o quê).
 
 ## Estrutura de Soluções CtCI
-- **Padrão de Diretório**: `ch_XX_nome/X_X_nome/rust` (snake_case, sem espaços). Espelhar estrutura original para facilitar PR no `careercup/CtCI-6th-Edition`.
+- **Padrão de Diretório**: `ch_XX_nome/X_X_nome` (snake_case, sem espaços). Repositório Cargo diretamente na pasta da questão, sem aninhamento adicional.
 - **Cargo**: Sempre inicializar como library (`cargo init --name nome_questao --lib`).
 - **Código (`src/lib.rs`)**: Conter assinaturas para múltiplas abordagens (ex: com e sem auxílio de DS), e um módulo interno `mod tests` com testes automatizados baseados nos requisitos.
 - **Documentação (`README.md`)**: Enunciado do problema em inglês e comandos de teste locais.
