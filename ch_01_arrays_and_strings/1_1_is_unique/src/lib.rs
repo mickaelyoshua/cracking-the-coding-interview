@@ -19,7 +19,6 @@ pub fn is_all_unique_hash_map(s: &str) -> bool {
             return false;
         }
     }
-
     true
 }
 
@@ -41,8 +40,26 @@ pub fn is_all_unique_hash_set(s: &str) -> bool {
     true
 }
 
+// O(1) in capacity
+// Bit Vector (only ASCII characters a-z)
+
+pub mod bit_vector;
+
 pub fn is_all_unique_no_ds(s: &str) -> bool {
-    unimplemented!()
+    if s.is_empty() {
+        return true;
+    }
+
+    let mut bv = bit_vector::BitVector::new();
+
+    for c in s.chars() {
+        let index = c as usize - 'a' as usize;
+        if bv.check(index) {
+            return false;
+        }
+        bv.set(index);
+    }
+    true
 }
 
 #[cfg(test)]
