@@ -32,7 +32,7 @@ pub fn check_permutation_sorting(s1: &str, s2: &str) -> bool {
 
 // O(2N)
 pub fn check_permutation_hashmap(s1: &str, s2: &str) -> bool {
-    // Make sure have same length
+    // Make sure strings have the same length
     if s1.len() != s2.len() {
         return false;
     }
@@ -71,30 +71,31 @@ pub fn check_permutation_hashmap(s1: &str, s2: &str) -> bool {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use proptest::prelude::*;
 
     fn run_tests_for(f: fn(&str, &str) -> bool) {
         // Happy path
-        assert!(f("abc", "cba"), "Falhou para permutação válida");
+        assert!(f("abc", "cba"), "Failed for valid permutation");
         assert!(
             f("listen", "silent"),
-            "Falhou para permutação válida 'listen'/'silent'"
+            "Failed for valid permutation 'listen'/'silent'"
         );
 
         // Base cases
-        assert!(f("", ""), "Falhou para strings vazias");
-        assert!(f("a", "a"), "Falhou para caracteres idênticos");
+        assert!(f("", ""), "Failed for empty strings");
+        assert!(f("a", "a"), "Failed for identical characters");
 
         // Edge cases - Not permutations
-        assert!(!f("abc", "ab"), "Falhou para comprimentos diferentes");
+        assert!(!f("abc", "ab"), "Failed for different lengths");
         assert!(
             !f("aab", "abb"),
-            "Falhou para quantidade de caracteres diferentes"
+            "Failed for different character counts"
         );
-        assert!(!f("abc", "def"), "Falhou para caracteres diferentes");
-        assert!(!f("God", "dog"), "Falhou para case sensitive");
+        assert!(!f("abc", "def"), "Failed for different characters");
+        assert!(!f("God", "dog"), "Failed for case sensitivity");
         assert!(
             !f("god   ", "dog"),
-            "Falhou para espaços em branco significativos"
+            "Failed for significant whitespaces"
         );
     }
 
@@ -102,5 +103,14 @@ mod tests {
     fn test_check_permutation() {
         run_tests_for(check_permutation_sorting);
         run_tests_for(check_permutation_hashmap);
+    }
+
+    proptest! {
+        #[test]
+        fn test_implementations_agree(s1 in "\\PC*", s2 in "\\PC*") {
+            let res_sorting = check_permutation_sorting(&s1, &s2);
+            let res_hashmap = check_permutation_hashmap(&s1, &s2);
+            prop_assert_eq!(res_sorting, res_hashmap);
+        }
     }
 }
