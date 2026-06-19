@@ -12,7 +12,7 @@ pub fn is_all_unique_hash_map(s: &str) -> bool {
     let mut map = HashMap::new();
     // O(N)
     for c in s.chars() {
-        // entry for in place manipulation
+        // Entry for in-place manipulation
         if let Entry::Vacant(e) = map.entry(c) {
             e.insert(1);
         } else {
@@ -23,7 +23,7 @@ pub fn is_all_unique_hash_map(s: &str) -> bool {
 }
 
 // HashSet stores only keys without values.
-// Based on sets. A collections of unique values.
+// Based on sets. A collection of unique values.
 pub fn is_all_unique_hash_set(s: &str) -> bool {
     if s.is_empty() {
         return true;
@@ -65,15 +65,16 @@ pub fn is_all_unique_no_ds(s: &str) -> bool {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use proptest::prelude::*;
 
     fn run_tests_for(f: fn(&str) -> bool) {
         // Happy path
-        assert!(!f("foo"), "Falhou para 'foo'");
-        assert!(f("bar"), "Falhou para 'bar'");
+        assert!(!f("foo"), "Failed for 'foo'");
+        assert!(f("bar"), "Failed for 'bar'");
 
         // Base cases
-        assert!(f(""), "Falhou para string vazia");
-        assert!(f("a"), "Falhou para caractere único");
+        assert!(f(""), "Failed for empty string");
+        assert!(f("a"), "Failed for single character");
     }
 
     #[test]
@@ -89,5 +90,17 @@ mod tests {
     #[test]
     fn test_no_ds() {
         run_tests_for(is_all_unique_no_ds);
+    }
+
+    proptest! {
+        #[test]
+        fn test_all_implementations_agree(s in "[a-z]*") {
+            let res_map = is_all_unique_hash_map(&s);
+            let res_set = is_all_unique_hash_set(&s);
+            let res_no_ds = is_all_unique_no_ds(&s);
+
+            prop_assert_eq!(res_map, res_set);
+            prop_assert_eq!(res_map, res_no_ds);
+        }
     }
 }
