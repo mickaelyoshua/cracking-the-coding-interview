@@ -35,6 +35,7 @@ Este arquivo serve como spec vivo e contexto primário para qualquer agente de I
 ## Estrutura de Soluções CtCI
 - **Padrão de Diretório**: `ch_XX_nome/X_X_nome` (snake_case, sem espaços). Repositório Cargo diretamente na pasta da questão, sem aninhamento adicional.
 - **Cargo**: Sempre inicializar como library (`cargo init --name nome_questao --lib`).
+- **Preparação de Questão**: Ao preparar uma nova questão, apenas criar o projeto cargo (arquivos de base) e colocar o enunciado em inglês como comentário no topo de `src/lib.rs` (seguindo o formato do 1.1). Não implementar soluções de imediato.
 - **Código (`src/lib.rs`)**: Conter assinaturas para múltiplas abordagens (ex: com e sem auxílio de DS), e um módulo interno `mod tests` com testes automatizados baseados nos requisitos.
 - **Documentação (`README.md`)**: Enunciado do problema em inglês e comandos de teste locais.
 - **Fluxo Contínuo**: Após finalizar uma questão, perguntar/sugerir proativamente a inicialização da próxima questão na sequência do livro.
