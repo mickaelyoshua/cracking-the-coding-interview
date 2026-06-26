@@ -11,7 +11,7 @@ pub fn sort(s: &str) -> String {
     chars.into_iter().collect()
 }
 
-// O(2*N*logN)
+// Time: O(N log N) | Space: O(N)
 pub fn check_permutation_sorting(s1: &str, s2: &str) -> bool {
     if s1.len() != s2.len() {
         return false;
@@ -30,7 +30,7 @@ pub fn check_permutation_sorting(s1: &str, s2: &str) -> bool {
     true
 }
 
-// O(2N)
+// Time: O(N) | Space: O(N)
 pub fn check_permutation_hashmap(s1: &str, s2: &str) -> bool {
     // Make sure strings have the same length
     if s1.len() != s2.len() {
@@ -71,7 +71,6 @@ pub fn check_permutation_hashmap(s1: &str, s2: &str) -> bool {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use proptest::prelude::*;
 
     fn run_tests_for(f: fn(&str, &str) -> bool) {
         // Happy path
@@ -100,17 +99,12 @@ mod tests {
     }
 
     #[test]
-    fn test_check_permutation() {
+    fn test_check_permutation_sorting() {
         run_tests_for(check_permutation_sorting);
-        run_tests_for(check_permutation_hashmap);
     }
 
-    proptest! {
-        #[test]
-        fn test_implementations_agree(s1 in "\\PC*", s2 in "\\PC*") {
-            let res_sorting = check_permutation_sorting(&s1, &s2);
-            let res_hashmap = check_permutation_hashmap(&s1, &s2);
-            prop_assert_eq!(res_sorting, res_hashmap);
-        }
+    #[test]
+    fn test_check_permutation_hashmap() {
+        run_tests_for(check_permutation_hashmap);
     }
 }

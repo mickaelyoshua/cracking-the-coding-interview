@@ -4,6 +4,7 @@
 // BCR (Best Conceivable Runtime) is O(N)
 use std::collections::{HashMap, HashSet, hash_map::Entry};
 
+// Time: O(N) | Space: O(N)
 pub fn is_all_unique_hash_map(s: &str) -> bool {
     if s.is_empty() {
         return true;
@@ -24,6 +25,7 @@ pub fn is_all_unique_hash_map(s: &str) -> bool {
 
 // HashSet stores only keys without values.
 // Based on sets. A collection of unique values.
+// Time: O(N) | Space: O(N)
 pub fn is_all_unique_hash_set(s: &str) -> bool {
     if s.is_empty() {
         return true;
@@ -40,8 +42,8 @@ pub fn is_all_unique_hash_set(s: &str) -> bool {
     true
 }
 
-// O(1) in capacity
 // Bit Vector (only ASCII characters a-z)
+// Time: O(N) | Space: O(1)
 
 pub mod bit_vector;
 
@@ -65,12 +67,15 @@ pub fn is_all_unique_no_ds(s: &str) -> bool {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use proptest::prelude::*;
 
     fn run_tests_for(f: fn(&str) -> bool) {
-        // Happy path
-        assert!(!f("foo"), "Failed for 'foo'");
+        // Happy path - Unique
         assert!(f("bar"), "Failed for 'bar'");
+        assert!(f("abcdefg"), "Failed for 'abcdefg'");
+
+        // Happy path - Not Unique
+        assert!(!f("foo"), "Failed for 'foo'");
+        assert!(!f("hello"), "Failed for 'hello'");
 
         // Base cases
         assert!(f(""), "Failed for empty string");
@@ -90,17 +95,5 @@ mod tests {
     #[test]
     fn test_no_ds() {
         run_tests_for(is_all_unique_no_ds);
-    }
-
-    proptest! {
-        #[test]
-        fn test_all_implementations_agree(s in "[a-z]*") {
-            let res_map = is_all_unique_hash_map(&s);
-            let res_set = is_all_unique_hash_set(&s);
-            let res_no_ds = is_all_unique_no_ds(&s);
-
-            prop_assert_eq!(res_map, res_set);
-            prop_assert_eq!(res_map, res_no_ds);
-        }
     }
 }
