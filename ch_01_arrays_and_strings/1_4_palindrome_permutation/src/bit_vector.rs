@@ -12,9 +12,4 @@ impl BitVector {
         let mask = 1 << bit;
         self.data ^= mask;
     }
-
-    pub fn check(&self, bit: usize) -> bool {
-        let mask = 1 << bit;
-        self.data & mask != 0
-    }
 }

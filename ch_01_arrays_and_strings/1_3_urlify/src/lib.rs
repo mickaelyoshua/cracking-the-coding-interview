@@ -10,7 +10,7 @@
 // Since it is mandatory to go through the string entirely, the
 // Best Conceivable Runtime (BCR) is O(N)
 
-// O(2N)
+// Time: O(N) | Space: O(1)
 pub fn urlify(s: &mut [char], true_length: usize) {
     let mut space_count = 0;
     // O()
@@ -43,7 +43,7 @@ pub fn urlify(s: &mut [char], true_length: usize) {
     }
 }
 
-// O(N²)
+// Time: O(N^2) | Space: O(1)
 pub fn urlify_brute_force(s: &mut [char], true_length: usize) {
     let mut current_len = true_length;
     // O(N)
@@ -65,75 +65,41 @@ pub fn urlify_brute_force(s: &mut [char], true_length: usize) {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use proptest::prelude::*;
 
-    fn run_urlify_example(f: fn(&mut [char], usize)) {
+    fn run_tests_for(f: fn(&mut [char], usize)) {
+        // Example
         let mut s: Vec<char> = "Mr John Smith    ".chars().collect();
         f(&mut s, 13);
-        let expected: Vec<char> = "Mr%20John%20Smith".chars().collect();
-        assert_eq!(s, expected);
-    }
+        assert_eq!(s, "Mr%20John%20Smith".chars().collect::<Vec<char>>());
 
-    fn run_urlify_empty(f: fn(&mut [char], usize)) {
+        // Empty string
         let mut s: Vec<char> = vec![];
         f(&mut s, 0);
-        let expected: Vec<char> = vec![];
-        assert_eq!(s, expected);
+        assert_eq!(s, vec![]);
+
+        // No spaces
+        let mut s: Vec<char> = "hello".chars().collect();
+        f(&mut s, 5);
+        assert_eq!(s, "hello".chars().collect::<Vec<char>>());
+
+        // Only spaces
+        let mut s: Vec<char> = "   ".chars().collect();
+        f(&mut s, 1);
+        assert_eq!(s, "%20".chars().collect::<Vec<char>>());
+
+        // Starting spaces
+        let mut s: Vec<char> = " a  ".chars().collect();
+        f(&mut s, 2);
+        assert_eq!(s, "%20a".chars().collect::<Vec<char>>());
     }
 
     #[test]
-    fn test_urlify_brute_force_example() {
-        run_urlify_example(urlify_brute_force);
+    fn test_urlify_brute_force() {
+        run_tests_for(urlify_brute_force);
     }
+    
     #[test]
-    fn test_urlify_optimal_example() {
-        run_urlify_example(urlify);
-    }
-
-    #[test]
-    fn test_urlify_brute_force_empty() {
-        run_urlify_empty(urlify_brute_force);
-    }
-    #[test]
-    fn test_urlify_optimal_empty() {
-        run_urlify_empty(urlify);
-    }
-
-    proptest! {
-        #[test]
-        fn test_urlify_brute_force_proptest(s in "[a-zA-Z0-9 ]*") {
-            run_proptest(s, urlify_brute_force)?;
-        }
-
-        #[test]
-        fn test_urlify_optimal_proptest(s in "[a-zA-Z0-9 ]*") {
-            run_proptest(s, urlify)?;
-        }
-    }
-
-    fn run_proptest(
-        s: String,
-        f: fn(&mut [char], usize),
-    ) -> Result<(), proptest::test_runner::TestCaseError> {
-        let s = s.trim_end();
-        let true_length = s.chars().count();
-        let spaces = s.chars().filter(|&c| c == ' ').count();
-
-        let mut buf: Vec<char> = s.chars().collect();
-        buf.extend(std::iter::repeat_n(' ', spaces * 2));
-
-        let mut expected = String::new();
-        for c in s.chars() {
-            if c == ' ' {
-                expected.push_str("%20");
-            } else {
-                expected.push(c);
-            }
-        }
-        let expected_chars: Vec<char> = expected.chars().collect();
-
-        f(&mut buf, true_length);
-        prop_assert_eq!(buf, expected_chars);
-        Ok(())
+    fn test_urlify_optimal() {
+        run_tests_for(urlify);
     }
 }

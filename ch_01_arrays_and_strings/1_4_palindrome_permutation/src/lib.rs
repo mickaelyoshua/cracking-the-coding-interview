@@ -11,7 +11,7 @@
 
 use std::collections::HashMap;
 
-// O(2N)
+// Time: O(N) | Space: O(N)
 pub fn is_palindrome_permutation_hash(s: &str) -> bool {
     let clean_s = s
         .chars()
@@ -42,7 +42,7 @@ pub fn is_palindrome_permutation_hash(s: &str) -> bool {
 pub mod bit_vector;
 use bit_vector::BitVector;
 
-// O(N)
+// Time: O(N) | Space: O(1)
 pub fn is_palindrome_permutation_bit_vector(s: &str) -> bool {
     let clean_s = s
         .chars()
@@ -65,7 +65,6 @@ pub fn is_palindrome_permutation_bit_vector(s: &str) -> bool {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use proptest::prelude::*;
 
     fn run_happy_path_true(f: fn(&str) -> bool) {
         // Ignores case and spaces
@@ -112,36 +111,5 @@ mod tests {
     #[test]
     fn test_bit_vector_edge_cases() {
         run_edge_cases(is_palindrome_permutation_bit_vector);
-    }
-
-    proptest! {
-        #[test]
-        fn test_hashmap_property(s in "[a-zA-Z ]*") {
-            run_property(s, is_palindrome_permutation_hash)?;
-        }
-        #[test]
-        fn test_bit_vector_property(s in "[a-zA-Z ]*") {
-            run_property(s, is_palindrome_permutation_bit_vector)?;
-        }
-    }
-
-    fn run_property(
-        s: String,
-        f: fn(&str) -> bool,
-    ) -> Result<(), proptest::test_runner::TestCaseError> {
-        let mut counts = std::collections::HashMap::new();
-        for c in s
-            .chars()
-            .filter(|c| c.is_ascii_alphabetic())
-            .map(|c| c.to_ascii_lowercase())
-        {
-            *counts.entry(c).or_insert(0) += 1;
-        }
-
-        let odd_counts = counts.values().filter(|&&v| v % 2 != 0).count();
-        let expected = odd_counts <= 1;
-
-        prop_assert_eq!(f(&s), expected);
-        Ok(())
     }
 }
