@@ -63,8 +63,38 @@ pub fn is_one_away_o1(s1: &str, s2: &str) -> bool {
         return false;
     }
 
-    // SEU CÓDIGO AQUI: Use s1.chars() e s2.chars() ao invés de alocar Vecs.
-    todo!()
+    let mut diff_count = 0;
+
+    let (bigger, lesser) = match s1.len().cmp(&s2.len()) {
+        Ordering::Equal => {
+            // O(N)
+            for (c1, c2) in s1.chars().zip(s2.chars()) {
+                if c1 != c2 {
+                    diff_count += 1;
+                }
+                if diff_count > 1 {
+                    return false;
+                }
+            }
+            return true;
+        }
+        Ordering::Greater => (s1, s2),
+        Ordering::Less => (s2, s1),
+    };
+
+    let mut lesser_iter = lesser.chars();
+    let mut lesser_c = lesser_iter.next();
+    for c in bigger.chars() {
+        if lesser_c.is_some_and(|lesser_c| c == lesser_c) {
+            lesser_c = lesser_iter.next();
+        } else {
+            diff_count += 1;
+            if diff_count > 1 {
+                return false;
+            }
+        }
+    }
+    true
 }
 
 #[cfg(test)]
