@@ -22,3 +22,6 @@ Cargo.lock
 *.swo
 .DS_Store
 proptest-regressions/
+
+# Ad-hoc binaries
+ch_01_arrays_and_strings/1_6_string_compression/tests
