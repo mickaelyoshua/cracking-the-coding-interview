@@ -33,13 +33,33 @@ pub fn is_rotation_space_o1(s1: &str, s2: &str) -> bool {
 
     let n = s1.chars().count();
 
+    let b1 = s1.as_bytes();
+    let b2 = s2.as_bytes();
+
     // O(N)
     for i in 0..n {
+        let mut match_found = true;
+
         // O(N)
-        let rotated_simulation = s1.chars().cycle().skip(i).take(n);
-        if rotated_simulation.eq(s2.chars()) {
+        for (j, c2) in b2.iter().enumerate() {
+            let rotated_idx = (i + j) % n;
+
+            if b1[rotated_idx] != *c2 {
+                match_found = false;
+                break;
+            }
+        }
+
+        if match_found {
             return true;
         }
+
+        // Rust way
+        // O(N)
+        // let rotated_simulation = s1.chars().cycle().skip(i).take(n);
+        // if rotated_simulation.eq(s2.chars()) {
+        //     return true;
+        // }
     }
     false
 }
